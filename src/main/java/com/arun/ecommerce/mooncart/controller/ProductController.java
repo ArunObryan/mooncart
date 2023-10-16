@@ -18,7 +18,7 @@ public class ProductController {
     //FieldInjection
     //If we @Autowire the Productservice it is called field injection.
     //@Autowire
-    private IProductService productService;
+    private final IProductService productService;
 
     //Constructor Injection
     //Autowire is not mandatory in constructor injection
@@ -42,5 +42,10 @@ public class ProductController {
     @DeleteMapping("/{id}")
     public ResponseEntity<GenericProductDto> deleteProductById(@PathVariable("id") Long id) throws NotFoundException {
         return new ResponseEntity<>(productService.deleteProductById(id), HttpStatus.OK);
+    }
+
+    @PutMapping("/{id")
+    public  ResponseEntity<GenericProductDto> updateProductById(@PathVariable("id") Long id, @RequestBody GenericProductDto genericProductDto) throws NotFoundException {
+        return new ResponseEntity<>(productService.updateProductById(id,genericProductDto),HttpStatus.OK);
     }
 }

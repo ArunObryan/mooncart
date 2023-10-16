@@ -1,5 +1,6 @@
 package com.arun.ecommerce.mooncart.thirdPartyProductServices.fakeStore;
 
+import com.arun.ecommerce.mooncart.dataTransferObjects.GenericProductDto;
 import com.arun.ecommerce.mooncart.exception.NotFoundException;
 import com.arun.ecommerce.mooncart.thirdPartyProductServices.IThirdPartyProductServiceClient;
 import lombok.Data;
@@ -14,7 +15,9 @@ import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @Data
@@ -30,13 +33,22 @@ public class FakeStoreProductServiceClient implements IThirdPartyProductServiceC
     public FakeStoreProductServiceClient(RestTemplateBuilder restTemplateBuilder){
         this.restTemplateBuilder=restTemplateBuilder;
     }
+
+
+    @Override
+    public FakeStoreProductDto createProduct(GenericProductDto product) {
+        RestTemplate restTemplate = restTemplateBuilder.build();
+        ResponseEntity<FakeStoreProductDto> response = restTemplate.postForEntity(buildProductsRequestURL(),product,FakeStoreProductDto.class);
+        return response.getBody();
+    }
+
     @Override
     public FakeStoreProductDto getProductById(Long id) {
         RestTemplate restTemplate = restTemplateBuilder.build();
         ResponseEntity<FakeStoreProductDto> response = restTemplate.getForEntity(buildProductRequestWithIdURL(), FakeStoreProductDto.class,id);
         response.getStatusCode();
-        FakeStoreProductDto fakeStoreProduct = response.getBody();
-        return fakeStoreProduct;
+        //FakeStoreProductDto fakeStoreProduct =
+        return response.getBody();
     }
 
     @Override
@@ -44,9 +56,7 @@ public class FakeStoreProductServiceClient implements IThirdPartyProductServiceC
         RestTemplate restTemplate = restTemplateBuilder.build();
         ResponseEntity<FakeStoreProductDto[]> response = restTemplate.getForEntity(buildProductsRequestURL(), FakeStoreProductDto[].class);
         List<FakeStoreProductDto> products = new ArrayList<>();
-        for(FakeStoreProductDto x: response.getBody()){
-            products.add(x);
-        }
+        Collections.addAll(products, Objects.requireNonNull(response.getBody()));
         return products;
     }
 
@@ -78,6 +88,15 @@ public class FakeStoreProductServiceClient implements IThirdPartyProductServiceC
     @Override
     public FakeStoreProductDto updateProductById(Long id) throws NotFoundException {
         return null;
+    }
+
+    @Override
+    public FakeStoreProductDto updateProductById(Long id, GenericProductDto genericProductDto) throws NotFoundException {
+        RestTemplate restTemplate = restTemplateBuilder.build();
+        RequestCallback requestCallback = restTemplate.httpEntityCallback(genericProductDto,FakeStoreProductDto.class);
+        ResponseExtractor<ResponseEntity<FakeStoreProductDto>> responseExtractor = restTemplate.responseEntityExtractor(FakeStoreProductDto.class);
+        ResponseEntity<FakeStoreProductDto> response = restTemplate.execute(buildProductRequestWithIdURL(),HttpMethod.PUT,requestCallback,responseExtractor,id);
+        return response.getBody();
     }
 
     @Override

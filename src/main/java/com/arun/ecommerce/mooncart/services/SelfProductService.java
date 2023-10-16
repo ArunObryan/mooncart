@@ -29,7 +29,7 @@ public class SelfProductService implements IProductService {
     }
 
     @Override
-    public GenericProductDto updateProductById(Long id) throws NotFoundException {
+    public GenericProductDto updateProductById(Long id,GenericProductDto genericProductDto) throws NotFoundException {
         return null;
     }
 }

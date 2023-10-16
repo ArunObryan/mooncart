@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 @Service("fakeStoreProductService")
 public class FakeStoreProductService implements IProductService {
 
-    private FakeStoreProductServiceClient fakeStoreProductServiceClient;
+    private final FakeStoreProductServiceClient fakeStoreProductServiceClient;
 
     public FakeStoreProductService(FakeStoreProductServiceClient fakeStoreProductServiceClient){
         this.fakeStoreProductServiceClient=fakeStoreProductServiceClient;
@@ -25,13 +25,13 @@ public class FakeStoreProductService implements IProductService {
 
     @Override
     public List<GenericProductDto> getAllProducts() {
-        return fakeStoreProductServiceClient.getAllProducts().stream().map(x->transformToGenericProduct(x)).collect(Collectors.toList());
+        return fakeStoreProductServiceClient.getAllProducts().stream().map(FakeStoreProductService::transformToGenericProduct).collect(Collectors.toList());
     }
 
     //This casting won't work. throws runtime error
     @Override
     public List<GenericProductDto> getListOfAllProducts() {
-        return fakeStoreProductServiceClient.getListOfAllProducts().stream().map(x->transformToGenericProduct(x)).collect(Collectors.toList());
+        return fakeStoreProductServiceClient.getListOfAllProducts().stream().map(FakeStoreProductService::transformToGenericProduct).collect(Collectors.toList());
     }
 
     @Override
@@ -40,8 +40,8 @@ public class FakeStoreProductService implements IProductService {
     }
 
     @Override
-    public GenericProductDto updateProductById(Long id) throws NotFoundException {
-        return null;
+    public GenericProductDto updateProductById(Long id,GenericProductDto genericProductDto) throws NotFoundException {
+        return transformToGenericProduct(fakeStoreProductServiceClient.updateProductById(id,genericProductDto));
     }
 
     private static GenericProductDto transformToGenericProduct(FakeStoreProductDto fakeStoreProduct){
