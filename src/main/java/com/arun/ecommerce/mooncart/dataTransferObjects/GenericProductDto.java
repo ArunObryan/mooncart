@@ -1,6 +1,6 @@
 package com.arun.ecommerce.mooncart.dataTransferObjects;
 
-import com.arun.ecommerce.mooncart.models.Category;
+
 import lombok.Getter;
 import lombok.Setter;
 

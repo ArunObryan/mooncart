@@ -1,3 +1,4 @@
+/*
 package com.arun.ecommerce.mooncart.models;
 
 import jakarta.persistence.Column;
@@ -10,9 +11,12 @@ import java.util.UUID;
 
 @MappedSuperclass
 public class BaseModel {
+
+//    @GeneratedValue(generator = "uuidgenerator")
+//    @GenericGenerator(name="uuidgenerator",strategy = "uuid2")
+//    @Column(name="id",columnDefinition = "binary(16",nullable = false)
+//    private UUID id;
     @Id
-    @GeneratedValue(generator = "uuidgenerator")
-    @GenericGenerator(name="uuidgenerator",strategy = "uuid2")
-    @Column(name="id",columnDefinition = "binary(16",nullable = false)
-    private UUID id;
+    private Long id;
 }
+*/
